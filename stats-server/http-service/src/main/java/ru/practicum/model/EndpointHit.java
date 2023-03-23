@@ -22,7 +22,7 @@ public class EndpointHit {
     @Column(length = 100, nullable = false)
     private String app;
 
-    @Column(length = 300, nullable = false)
+    @Column(length = 1000, nullable = false)
     private String uri;
 
     @Column(length = 20, nullable = false)

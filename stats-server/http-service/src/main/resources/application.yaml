@@ -19,12 +19,12 @@ spring:
       ddl-auto: none
   datasource:
     driverClassName: org.postgresql.Driver
-    username: root
-    password: root
-    url: jdbc:postgresql://localhost:5432/explore_with_me?encoding=utf8
-#    username: ${POSTGRES_USER:root}
-#    password: ${POSTGRES_PASSWORD:root}
-#    url: ${SPRING_DATASOURCE_URL}
+    username: ${POSTGRES_USER:root}
+    password: ${POSTGRES_PASSWORD:root}
+    url: ${SPRING_DATASOURCE_URL}
+#    username: root
+#    password: root
+#    url: jdbc:postgresql://localhost:5432/explore_with_me?encoding=utf8
   sql:
     init:
       mode: always
