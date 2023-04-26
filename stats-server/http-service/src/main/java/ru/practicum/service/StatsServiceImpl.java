@@ -31,6 +31,18 @@ public class StatsServiceImpl implements StatsService {
     }
 
     @Override
+    @Transactional
+    public List<EndpointHit> saveAll(List<EndpointHit> endpointHits) {
+        log.info("Start saving endpoint hits {}", endpointHits);
+
+        List<EndpointHit> newEndpointHits = repository.saveAll(endpointHits);
+
+        log.info("Finish saving endpoint hit {}", endpointHits);
+
+        return newEndpointHits;
+    }
+
+    @Override
     public List<ViewStats> getViewStats(String start, String end, List<String> uris, boolean unique) {
         log.info("Start getting view stats where" +
                 " start: {}, end: {}, unique:{}, uris: {}", start, end, unique, uris);

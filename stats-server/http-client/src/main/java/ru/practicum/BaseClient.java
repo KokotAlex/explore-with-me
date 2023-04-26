@@ -1,6 +1,8 @@
 package ru.practicum;
 
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.lang.Nullable;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
@@ -14,7 +16,7 @@ public class BaseClient {
         this.rest = rest;
     }
 
-    protected ResponseEntity<Object> get(String path, @Nullable Map<String, Object> parameters) {
+    protected <T> ResponseEntity<Object> get(String path, @Nullable Map<String, Object> parameters) {
         return makeAndSendRequest(HttpMethod.GET, path, parameters, null);
     }
 

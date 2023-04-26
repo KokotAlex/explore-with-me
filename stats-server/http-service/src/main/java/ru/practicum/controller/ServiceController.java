@@ -32,6 +32,19 @@ public class ServiceController {
         return EndpointHitMapper.toEndpointHitDto(savedEndpointHit);
     }
 
+    @PostMapping("/hits")
+    public List<EndpointHitDto> postHit(@RequestBody List<EndpointHitDto> endpointHitDtos) {
+        log.info("processing a request to save information about access to a specific application's uri list");
+
+        List<EndpointHit> endpointHits = endpointHitDtos.stream()
+                                                        .map(EndpointHitMapper::toEndpointHit)
+                                                        .collect(Collectors.toList());
+
+        List<EndpointHit> savedEndpointHits = service.saveAll(endpointHits);
+
+        return savedEndpointHits.stream().map(EndpointHitMapper::toEndpointHitDto).collect(Collectors.toList());
+    }
+
     @GetMapping("/stats")
     public List<ViewStatsDto> getStats(@RequestParam String start,
                                  @RequestParam String end,
