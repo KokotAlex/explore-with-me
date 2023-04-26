@@ -11,7 +11,7 @@ import java.util.Optional;
 public interface EventRepository extends
         JpaRepository<Event, Long>,
         QuerydslPredicateExecutor<Event>,
-        EventRepositoryCustom{
+        EventRepositoryCustom {
 
     Optional<Event> findEventByIdAndUserId(Long eventId, Long userId);
 

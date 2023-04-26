@@ -360,8 +360,7 @@ public class EventServiceImpl implements EventService {
                                                        ViewStatsDto::getUri,
                                                        ViewStatsDto::getHits));
         // Заполним события данными из сервиса статистики.
-        events = events.stream().peek(event ->
-                       {
+        events = events.stream().peek(event -> {
                            Long eventId = event.getId();
                            String uri = uriAndIdMap.get(eventId);
                            Long amountViews = views.get(uri);

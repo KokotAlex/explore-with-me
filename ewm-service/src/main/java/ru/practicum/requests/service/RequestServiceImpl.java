@@ -189,8 +189,8 @@ public class RequestServiceImpl implements RequestService {
                 break;
             case REJECTED:
                 rejectedRequests = requestsToUpdate.stream().peek(
-                        request -> request.setStatus(MembershipRequestStatus.REJECTED)).
-                        collect(Collectors.toList());
+                        request -> request.setStatus(MembershipRequestStatus.REJECTED))
+                                                   .collect(Collectors.toList());
                 break;
             default:
                 List<MembershipRequestStatus> statusList = new ArrayList<>();
