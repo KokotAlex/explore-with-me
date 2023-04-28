@@ -348,25 +348,28 @@ public class EventServiceImpl implements EventService {
         Map<Long, String> uriAndIdMap = events.stream()
                                               .map(Event::getId)
                                               .collect(Collectors.toMap(Function.identity(), id -> "/events/" + id));
+
         // Получим данные из сервиса статистики.
-        List<ViewStatsDto> viewStatsDtos = httpClient.getStats(
+        List<ViewStatsDto> stats = httpClient.getStats(
                 Utils.localDateTimeToString(minDate),
                 Utils.localDateTimeToString(now()),
                 new ArrayList<>(uriAndIdMap.values()),
                 true);
-        // Сформируем Map для сопоставления запроса и количества просмотров.
-        Map<String, Long> views = viewStatsDtos.stream()
-                                               .collect(Collectors.toMap(
-                                                       ViewStatsDto::getUri,
-                                                       ViewStatsDto::getHits));
-        // Заполним события данными из сервиса статистики.
-        events = events.stream().peek(event -> {
-                           Long eventId = event.getId();
-                           String uri = uriAndIdMap.get(eventId);
-                           Long amountViews = views.get(uri);
-                           event.setViews(amountViews);
-                       })
-                       .collect(Collectors.toList());
+
+        events = events
+                .stream()
+                .peek(event -> {
+                    Long viewCount = 0L;
+                    for (ViewStatsDto view: stats) {
+                        if (view.getUri().equals("/events/" + event.getId())) {
+                            viewCount = view.getHits();
+                            break;
+                        }
+                    }
+                    event.setViews(viewCount);
+                })
+                .collect(Collectors.toList());
+
         // При необходимости отсортируем события по количеству просмотров.
         EventSort sort = parameters.getSort();
         if (sort != null && sort.equals(EventSort.VIEWS)) {

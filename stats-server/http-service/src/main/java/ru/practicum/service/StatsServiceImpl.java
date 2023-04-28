@@ -49,7 +49,7 @@ public class StatsServiceImpl implements StatsService {
 
         List<ViewStats> viewStats = repository.findViewStats(start, end, uris, unique);
 
-        log.info("Finish getting view stats");
+        log.info("Finish getting view stats: {}", viewStats);
 
         return  viewStats;
     }
