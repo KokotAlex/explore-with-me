@@ -43,7 +43,7 @@ public class ServiceController {
                                                         .collect(Collectors.toList());
 
         List<EndpointHit> savedEndpointHits = service.saveAll(endpointHits);
-        List<EndpointHitDto> savedEndpointHitDtos =savedEndpointHits.stream()
+        List<EndpointHitDto> savedEndpointHitDtos = savedEndpointHits.stream()
                                                                     .map(EndpointHitMapper::toEndpointHitDto)
                                                                     .collect(Collectors.toList());
         return ResponseEntity.status(HttpStatus.CREATED).body(savedEndpointHitDtos);
