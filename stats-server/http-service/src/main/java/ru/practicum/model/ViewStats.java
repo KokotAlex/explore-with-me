@@ -2,12 +2,8 @@ package ru.practicum.model;
 
 import lombok.*;
 
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
-@Getter
-@Setter
-@ToString
+@Data
 public class ViewStats {
     private String app;
     private String uri;

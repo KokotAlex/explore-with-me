@@ -355,7 +355,7 @@ public class EventServiceImpl implements EventService {
                 Utils.localDateTimeToString(now()),
                 new ArrayList<>(uriAndIdMap.values()),
                 true);
-
+        // Заполним количество просмотров.
         events = events
                 .stream()
                 .peek(event -> {

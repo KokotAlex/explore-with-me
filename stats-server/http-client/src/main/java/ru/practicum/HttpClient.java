@@ -1,5 +1,7 @@
 package ru.practicum;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.ResponseEntity;
@@ -37,8 +39,10 @@ public class HttpClient extends BaseClient {
                 "uris", uris,
                 "unique", unique);
 
-        ResponseEntity<Object> responseEntity = get("/stats?start={start}&end={end}&uris={uris}&unique={unique}", parameters);
-        return (List<ViewStatsDto>) responseEntity.getBody();
+        ResponseEntity<Object> responseEntity = get(
+                "/stats?start={start}&end={end}&uris={uris}&unique={unique}",
+                parameters);
+        return new ObjectMapper().convertValue(responseEntity.getBody(), new TypeReference<>() {});
     }
 
 }
