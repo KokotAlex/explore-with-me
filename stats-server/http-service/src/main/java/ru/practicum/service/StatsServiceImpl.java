@@ -2,6 +2,7 @@ package ru.practicum.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.model.EndpointHit;
@@ -43,11 +44,11 @@ public class StatsServiceImpl implements StatsService {
     }
 
     @Override
-    public List<ViewStats> getViewStats(String start, String end, List<String> uris, boolean unique) {
+    public List<ViewStats> getViewStats(String start, String end, boolean unique, @Nullable List<String> uris) {
         log.info("Start getting view stats where" +
                 " start: {}, end: {}, unique:{}, uris: {}", start, end, unique, uris);
 
-        List<ViewStats> viewStats = repository.findViewStats(start, end, uris, unique);
+        List<ViewStats> viewStats = repository.findViewStats(start, end, unique, uris);
 
         log.info("Finish getting view stats: {}", viewStats);
 

@@ -48,12 +48,12 @@ public class ServiceController {
     @GetMapping("/stats")
     public List<ViewStatsDto> getStats(@RequestParam String start,
                                  @RequestParam String end,
-                                 @RequestParam List<String> uris,
+                                 @RequestParam(required = false) List<String> uris,
                                  @RequestParam(defaultValue = "false") Boolean unique) {
         log.info("processing a request to obtain statistics on visits" +
                 " where start: {}, end: {}, unique:{}, uris: {}", start, end, unique, uris);
 
-        List<ViewStats> stats = service.getViewStats(start, end, uris, unique);
+        List<ViewStats> stats = service.getViewStats(start, end, unique, uris);
 
         return stats.stream()
                     .map(ViewStatsMapper::toViewStatsDto)

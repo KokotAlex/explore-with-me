@@ -1,5 +1,6 @@
 package ru.practicum.service;
 
+import org.springframework.lang.Nullable;
 import ru.practicum.model.EndpointHit;
 import ru.practicum.model.ViewStats;
 
@@ -11,5 +12,5 @@ public interface StatsService {
 
     List<EndpointHit> saveAll(List<EndpointHit> endpointHits);
 
-    List<ViewStats> getViewStats(String start, String end, List<String> uris, boolean unique);
+    List<ViewStats> getViewStats(String start, String end, boolean unique, @Nullable List<String> uris);
 }
