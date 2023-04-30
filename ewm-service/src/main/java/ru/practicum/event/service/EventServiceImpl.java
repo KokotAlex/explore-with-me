@@ -104,6 +104,7 @@ public class EventServiceImpl implements EventService {
 
         String timestamp = Utils.localDateTimeToString(now());
         String ip = request.getRemoteAddr();
+        // Сформируем список эндпоинтов всех событий.
         List<EndpointHitDto> endpointHitDtos = events.stream()
                                                      .map(event -> EndpointHitDto.builder()
                                                                                  .app("ewm")
@@ -112,6 +113,14 @@ public class EventServiceImpl implements EventService {
                                                                                  .timestamp(timestamp)
                                                                                  .build())
                                                      .collect(Collectors.toList());
+        // Добавим в список эндпонит получения всех событий
+        endpointHitDtos.add(EndpointHitDto.builder()
+                                          .app("ewm")
+                                          .uri(request.getRequestURI())
+                                          .ip(ip)
+                                          .timestamp(timestamp)
+                                          .build());
+
         httpClient.postHits(endpointHitDtos);
 
         return events;
