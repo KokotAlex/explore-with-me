@@ -93,8 +93,8 @@ public class RequestServiceImpl implements RequestService {
                 " to participate in an event", requestId, userId);
 
         Optional<Request> requestOptional = requestRepository.findByIdAndRequesterId(requestId, userId);
-        Request requestToCancel = requestOptional.orElseThrow(
-                () -> new NotFoundException("Request with id: "
+        Request requestToCancel = requestOptional
+                .orElseThrow(() -> new NotFoundException("Request with id: "
                         + requestId
                         + " for requester with id: "
                         + userId
@@ -188,9 +188,10 @@ public class RequestServiceImpl implements RequestService {
                 }
                 break;
             case REJECTED:
-                rejectedRequests = requestsToUpdate.stream().peek(
-                        request -> request.setStatus(MembershipRequestStatus.REJECTED))
-                                                   .collect(Collectors.toList());
+                rejectedRequests = requestsToUpdate
+                        .stream()
+                        .peek(request -> request.setStatus(MembershipRequestStatus.REJECTED))
+                        .collect(Collectors.toList());
                 break;
             default:
                 List<MembershipRequestStatus> statusList = new ArrayList<>();

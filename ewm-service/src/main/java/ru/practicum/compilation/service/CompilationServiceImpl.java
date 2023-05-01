@@ -112,8 +112,9 @@ public class CompilationServiceImpl implements CompilationService {
     public Compilation getById(Long compId) {
         log.info("Start getting a compilation with id: {}", compId);
 
-        return compilationRepository.findById(compId).orElseThrow(
-                () -> new NotFoundException(Compilation.class.getSimpleName(), compId));
+        return compilationRepository
+                .findById(compId)
+                .orElseThrow(() -> new NotFoundException(Compilation.class.getSimpleName(), compId));
     }
 
     @Override

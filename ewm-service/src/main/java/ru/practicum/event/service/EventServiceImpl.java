@@ -134,12 +134,12 @@ public class EventServiceImpl implements EventService {
             throw new NotFoundException(User.class.getSimpleName(), userId);
         }
 
-        return eventRepository.findEventByIdAndUserId(eventId, userId).orElseThrow(
-                () -> new NotFoundException("Event with id: "
-                        + eventId
-                        + " for user with id: "
-                        + userId
-                        + " does not exist"));
+        return eventRepository.findEventByIdAndUserId(eventId, userId)
+                              .orElseThrow(() -> new NotFoundException("Event with id: "
+                                      + eventId
+                                      + " for user with id: "
+                                      + userId
+                                      + " does not exist"));
     }
 
     @Override

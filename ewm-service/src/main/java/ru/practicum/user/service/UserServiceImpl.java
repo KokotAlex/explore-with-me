@@ -52,8 +52,9 @@ public class UserServiceImpl implements UserService {
     public User getById(Long userId) {
         log.info("Start getting user by id: {}", userId);
 
-        return userRepository.findById(userId).orElseThrow(
-                () -> new NotFoundException(User.class.getSimpleName(), userId));
+        return userRepository
+                .findById(userId)
+                .orElseThrow(() -> new NotFoundException(User.class.getSimpleName(), userId));
     }
 
     @Override

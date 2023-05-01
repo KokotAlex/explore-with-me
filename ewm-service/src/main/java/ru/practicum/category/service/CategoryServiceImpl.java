@@ -34,8 +34,9 @@ public class CategoryServiceImpl implements CategoryService {
     public Category getById(Long catId) {
         log.info("Start getting category by id: {}", catId);
 
-        return categoryRepository.findById(catId).orElseThrow(
-                () -> new NotFoundException(Category.class.getSimpleName(), catId));
+        return categoryRepository
+                .findById(catId)
+                .orElseThrow(() -> new NotFoundException(Category.class.getSimpleName(), catId));
     }
 
     @Override
@@ -57,8 +58,6 @@ public class CategoryServiceImpl implements CategoryService {
     public void delete(Long catId) {
         log.info("Start deleting category with id: {}", catId);
 
-        // На самом деле метод delete должен быть идемпотентным.
-        // Но по спецификации должна быть проверка существования категории.
         if (!categoryRepository.existsById(catId)) {
             throw new NotFoundException(Category.class.getSimpleName(), catId);
         }
