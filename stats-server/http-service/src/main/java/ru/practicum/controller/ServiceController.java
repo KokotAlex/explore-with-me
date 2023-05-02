@@ -2,6 +2,8 @@ package ru.practicum.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.EndpointHitDto;
 import ru.practicum.ViewStatsDto;
@@ -23,28 +25,44 @@ public class ServiceController {
     public final StatsService service;
 
     @PostMapping("/hit")
-    public EndpointHitDto postHit(@RequestBody EndpointHitDto endpointHitDto) {
+    public ResponseEntity<EndpointHitDto> postHit(@RequestBody EndpointHitDto endpointHitDto) {
         log.info("processing a request to save information about access to a specific application uri");
 
         EndpointHit endpointHit = EndpointHitMapper.toEndpointHit(endpointHitDto);
         EndpointHit savedEndpointHit = service.save(endpointHit);
+        EndpointHitDto savedEndpointHitDto = EndpointHitMapper.toEndpointHitDto(savedEndpointHit);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedEndpointHitDto);
+    }
 
-        return EndpointHitMapper.toEndpointHitDto(savedEndpointHit);
+    @PostMapping("/hits")
+    public ResponseEntity<List<EndpointHitDto>> postHit(@RequestBody List<EndpointHitDto> endpointHitDtos) {
+        log.info("processing a request to save information about access to a specific application's uri list");
+
+        List<EndpointHit> endpointHits = endpointHitDtos.stream()
+                                                        .map(EndpointHitMapper::toEndpointHit)
+                                                        .collect(Collectors.toList());
+
+        List<EndpointHit> savedEndpointHits = service.saveAll(endpointHits);
+        List<EndpointHitDto> savedEndpointHitDtos = savedEndpointHits.stream()
+                                                                    .map(EndpointHitMapper::toEndpointHitDto)
+                                                                    .collect(Collectors.toList());
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedEndpointHitDtos);
     }
 
     @GetMapping("/stats")
-    public List<ViewStatsDto> getStats(@RequestParam String start,
+    public ResponseEntity<List<ViewStatsDto>> getStats(@RequestParam String start,
                                  @RequestParam String end,
-                                 @RequestParam List<String> uris,
+                                 @RequestParam(required = false) List<String> uris,
                                  @RequestParam(defaultValue = "false") Boolean unique) {
         log.info("processing a request to obtain statistics on visits" +
                 " where start: {}, end: {}, unique:{}, uris: {}", start, end, unique, uris);
 
-        List<ViewStats> stats = service.getViewStats(start, end, uris, unique);
+        List<ViewStats> stats = service.getViewStats(start, end, unique, uris);
+        List<ViewStatsDto> statsDtos = stats.stream()
+                                            .map(ViewStatsMapper::toViewStatsDto)
+                                            .collect(Collectors.toList());
 
-        return stats.stream()
-                    .map(ViewStatsMapper::toViewStatsDto)
-                    .collect(Collectors.toList());
+        return ResponseEntity.status(HttpStatus.OK).body(statsDtos);
     }
 
 }

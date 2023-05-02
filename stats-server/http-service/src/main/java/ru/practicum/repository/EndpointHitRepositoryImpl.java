@@ -1,10 +1,11 @@
 package ru.practicum.repository;
 
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.Tuple;
-import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import lombok.RequiredArgsConstructor;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
 import ru.practicum.mapper.ViewStatsMapper;
 import ru.practicum.model.QEndpointHit;
@@ -21,12 +22,15 @@ public class EndpointHitRepositoryImpl implements EndpointHitRepositoryCustom {
 
     private final EntityManager entityManager;
 
-    public List<ViewStats> findViewStats(String start, String end, List<String> uris, boolean unique) {
+    public List<ViewStats> findViewStats(String start, String end, boolean unique, @Nullable List<String> uris) {
         // Сформируем предикаты.
         QEndpointHit endpointHit = QEndpointHit.endpointHit;
-        BooleanExpression filter = endpointHit.timestamp.between(
+
+        BooleanBuilder filter = new BooleanBuilder();
+
+        filter.and(endpointHit.timestamp.between(
                 Utils.stringToLocalDateTime(start),
-                Utils.stringToLocalDateTime(end));
+                Utils.stringToLocalDateTime(end)));
         if (uris != null && !uris.isEmpty()) {
             filter.and(endpointHit.uri.in(uris));
         }

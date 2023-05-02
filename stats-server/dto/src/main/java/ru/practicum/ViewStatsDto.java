@@ -4,11 +4,11 @@ import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 
-@Getter
-@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Getter
+@Setter
 public class ViewStatsDto {
 
     @NotBlank(message = "Service app must be filled.")
