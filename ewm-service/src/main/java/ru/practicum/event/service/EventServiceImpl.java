@@ -2,6 +2,7 @@ package ru.practicum.event.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.EndpointHitDto;
@@ -9,6 +10,9 @@ import ru.practicum.HttpClient;
 import ru.practicum.ViewStatsDto;
 import ru.practicum.category.model.Category;
 import ru.practicum.category.service.CategoryService;
+import ru.practicum.comment.model.Comment;
+import ru.practicum.comment.model.CommentRequestParameters;
+import ru.practicum.comment.service.CommentService;
 import ru.practicum.event.dto.UpdateEventAdminRequest;
 import ru.practicum.event.dto.UpdateEventRequest;
 import ru.practicum.event.dto.UpdateEventUserRequest;
@@ -33,13 +37,14 @@ import static java.time.LocalDateTime.now;
 @Slf4j
 @Service
 @Transactional(readOnly = true)
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor_ = {@Lazy})
 public class EventServiceImpl implements EventService {
     private final RequestRepository requestRepository;
     public final EventRepository eventRepository;
     public final UserService userService;
     public final CategoryService categoryService;
     public  final HttpClient httpClient;
+    public final CommentService commentService;
 
     @Override
     @Transactional
@@ -66,6 +71,7 @@ public class EventServiceImpl implements EventService {
         eventToSave.setCreatedOn(now());
         eventToSave.setState(EventState.PENDING);
         eventToSave.setRequestModeration(requestModeration);
+        eventToSave.setComments(new HashSet<>());
 
         // сохраним сформированное событие.
         return eventRepository.save(eventToSave);
@@ -341,10 +347,18 @@ public class EventServiceImpl implements EventService {
         }
 
         // Заполним запросы на участие.
-        // TODO Переделать получение заявок на участие. Их нужно получать тем же запросом, который формирует events
         events = events.stream().peek(event -> {
             Set<Request> requests = requestRepository.findByEvent(event);
             event.setRequests(requests);
+        }).collect(Collectors.toList());
+
+        // Заполним комментарии.
+        events = events.stream().peek(event -> {
+            CommentRequestParameters commentParameters = CommentRequestParameters.builder()
+                                                                                 .eventId(event.getId())
+                                                                                 .build();
+            List<Comment> comments = commentService.getByParameters(commentParameters);
+            event.setComments(new HashSet<>(comments));
         }).collect(Collectors.toList());
 
         // Получим минимальную дату создания события.

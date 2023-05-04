@@ -62,8 +62,6 @@ public class EventRepositoryImpl implements EventRepositoryCustom {
                     .offset(parameters.getFrom())
                     .limit(parameters.getSize())
                     .fetch();
-
-        //TODO Доработать для возвращения requests в составе event
     }
 
     private BooleanExpression getFilters(RequestParameters parameters, Expression<Long> confirmedRequests) {
