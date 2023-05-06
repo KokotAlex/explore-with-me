@@ -59,7 +59,9 @@ public class PublicEventController {
                                                    .map(EventMapper::toEventShortDto)
                                                    .collect(Collectors.toList());
 
-        return ResponseEntity.status(HttpStatus.OK).body(eventShortDtos);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(eventShortDtos);
     }
 
     @GetMapping("/{id}")
@@ -71,7 +73,9 @@ public class PublicEventController {
         Event event = eventService.publicGetEventById(id, request);
         EventFullDto eventFullDto = EventMapper.toEventFullDto(event);
 
-        return ResponseEntity.status(HttpStatus.OK).body(eventFullDto);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(eventFullDto);
     }
 
 }

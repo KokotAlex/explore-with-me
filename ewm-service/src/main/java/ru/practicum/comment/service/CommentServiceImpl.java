@@ -70,10 +70,7 @@ public class CommentServiceImpl implements CommentService {
                                                                       .build();
         List<Comment> comments = commentRepository.findCommentsByParameters(parameters);
         if (comments.isEmpty()) {
-            throw new NotFoundException("Not found comment with id: "
-                    + commentId
-                    + " with author "
-                    + user);
+            throw new NotFoundException(String.format("Not found comment with id: %d with author %s", commentId, user));
         }
 
         return comments.get(0);

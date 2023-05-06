@@ -54,7 +54,9 @@ public class PrivateCommentController {
 
         commentService.delete(commentId, userId);
 
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return ResponseEntity
+                .noContent()
+                .build();
     }
 
     @PatchMapping("/{commentId}")
@@ -67,7 +69,9 @@ public class PrivateCommentController {
         Comment updatedComment = commentService.update(updateCommentRequest, commentId, userId);
         CommentDto updatedCommentDto = CommentMapper.toCommentDto(updatedComment);
 
-        return ResponseEntity.status(HttpStatus.OK).body(updatedCommentDto);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(updatedCommentDto);
     }
 
     @GetMapping("/{commentId}")
@@ -79,7 +83,9 @@ public class PrivateCommentController {
         Comment comment = commentService.getUsersCommentById(userId, commentId);
         CommentDto commentToReturn = CommentMapper.toCommentDto(comment);
 
-        return ResponseEntity.status(HttpStatus.OK).body(commentToReturn);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(commentToReturn);
     }
 
 
@@ -111,6 +117,8 @@ public class PrivateCommentController {
                                                .map(CommentMapper::toCommentDto)
                                                .collect(Collectors.toList());
 
-        return ResponseEntity.status(HttpStatus.OK).body(commentDtos);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(commentDtos);
     }
 }

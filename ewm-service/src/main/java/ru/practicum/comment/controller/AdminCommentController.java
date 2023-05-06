@@ -32,7 +32,9 @@ public class AdminCommentController {
         Comment updatedComment = commentService.updateState(commentId, state);
         CommentDto updatedCommentDto = CommentMapper.toCommentDto(updatedComment);
 
-        return ResponseEntity.status(HttpStatus.OK).body(updatedCommentDto);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(updatedCommentDto);
     }
 
 }

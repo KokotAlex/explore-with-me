@@ -57,7 +57,9 @@ public class PublicCommentController {
                                                .map(CommentMapper::toCommentDto)
                                                .collect(Collectors.toList());
 
-        return ResponseEntity.status(HttpStatus.OK).body(commentDtos);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(commentDtos);
     }
 
 }

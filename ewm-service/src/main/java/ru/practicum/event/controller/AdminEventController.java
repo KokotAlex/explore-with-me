@@ -38,7 +38,9 @@ public class AdminEventController {
         Event event = service.update(updateEventAdminRequest, eventId);
         EventFullDto eventFullDto = EventMapper.toEventFullDto(event);
 
-        return ResponseEntity.status(HttpStatus.OK).body(eventFullDto);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(eventFullDto);
 
     }
 
@@ -67,7 +69,9 @@ public class AdminEventController {
                                              .map(EventMapper::toEventFullDto)
                                              .collect(Collectors.toList());
 
-        return ResponseEntity.status(HttpStatus.OK).body(eventsDto);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(eventsDto);
     }
 
 }

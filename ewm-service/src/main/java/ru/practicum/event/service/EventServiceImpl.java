@@ -140,12 +140,10 @@ public class EventServiceImpl implements EventService {
             throw new NotFoundException(User.class.getSimpleName(), userId);
         }
 
-        return eventRepository.findEventByIdAndUserId(eventId, userId)
-                              .orElseThrow(() -> new NotFoundException("Event with id: "
-                                      + eventId
-                                      + " for user with id: "
-                                      + userId
-                                      + " does not exist"));
+        return eventRepository
+                .findEventByIdAndUserId(eventId, userId)
+                .orElseThrow(() -> new NotFoundException(String
+                        .format("Event with id: %d for user with id: %d does not exist", eventId, userId)));
     }
 
     @Override
@@ -188,7 +186,7 @@ public class EventServiceImpl implements EventService {
                     break;
                 default:
                     // Появился новый статус. Выдадим ошибку.
-                    throw new RuntimeException("State " + stateAction + " is not supported");
+                    throw new RuntimeException(String.format("State %s is not supported", stateAction));
             }
         }
 
@@ -218,7 +216,7 @@ public class EventServiceImpl implements EventService {
                         break;
                     default:
                         // Появился новый статус. Выдадим ошибку.
-                        throw new RuntimeException("State " + stateAction + " is not supported");
+                        throw new RuntimeException(String.format("State %s is not supported", stateAction));
                 }
             } else {
                 throw new ConflictException("An event can only be published" +
@@ -232,9 +230,8 @@ public class EventServiceImpl implements EventService {
         if (publishedDate != null) {
             int minPeriod = 1;
             if (publishedDate.plusHours(minPeriod).isAfter(eventToUpdate.getEventDate())) {
-                throw new ConflictException("the start date of the event to be changed must be no earlier than "
-                        + minPeriod
-                        + " hours from the publication date");
+                throw new ConflictException(String.format("the start date of the event to be changed" +
+                        " must be no earlier than %d hours from the publication date", minPeriod));
             }
         }
 
