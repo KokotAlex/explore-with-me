@@ -50,7 +50,9 @@ public class UserController {
                 .map(UserMapper::toUserDto)
                 .collect(Collectors.toList());
 
-        return ResponseEntity.status(HttpStatus.OK).body(users);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(users);
     }
 
     @DeleteMapping("/{userId}")
@@ -59,7 +61,9 @@ public class UserController {
 
         service.delete(userId);
 
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return ResponseEntity
+                .noContent()
+                .build();
     }
 
 }

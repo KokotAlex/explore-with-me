@@ -34,7 +34,9 @@ public class PublicCategoryController {
                                               .map(CategoryMapper::toCategoryDto)
                                               .collect(Collectors.toList());
 
-        return ResponseEntity.status(HttpStatus.OK).body(categories);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(categories);
     }
 
     @GetMapping("/{catId}")
@@ -43,7 +45,9 @@ public class PublicCategoryController {
 
         CategoryDto categoryDto = CategoryMapper.toCategoryDto(service.getById(catId));
 
-        return ResponseEntity.status(HttpStatus.OK).body(categoryDto);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(categoryDto);
     }
 
 }

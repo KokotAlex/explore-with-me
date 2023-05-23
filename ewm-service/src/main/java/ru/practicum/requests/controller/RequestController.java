@@ -33,7 +33,9 @@ public class RequestController {
         Request request = service.addRequest(userId, eventId);
         ParticipationRequestDto requestDto = RequestMapper.toParticipationRequestDto(request);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(requestDto);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(requestDto);
     }
 
     @GetMapping
@@ -46,7 +48,9 @@ public class RequestController {
                                                             .map(RequestMapper::toParticipationRequestDto)
                                                             .collect(Collectors.toList());
 
-        return ResponseEntity.status(HttpStatus.OK).body(requestsDto);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(requestsDto);
     }
 
     @PatchMapping("/{requestId}/cancel")
@@ -59,7 +63,9 @@ public class RequestController {
         Request request = service.cancelRequest(userId, requestId);
         ParticipationRequestDto requestDto = RequestMapper.toParticipationRequestDto(request);
 
-        return ResponseEntity.status(HttpStatus.OK).body(requestDto);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(requestDto);
     }
 
 }

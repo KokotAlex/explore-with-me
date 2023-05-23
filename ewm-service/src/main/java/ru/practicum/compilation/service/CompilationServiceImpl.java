@@ -48,9 +48,7 @@ public class CompilationServiceImpl implements CompilationService {
                 List<Long> notFoundIds = eventsIds.stream()
                                                   .filter(id -> !foundIds.contains(id))
                                                   .collect(Collectors.toList());
-                throw new ConflictException("Events with IDs: "
-                        + notFoundIds
-                        + " do not exist");
+                throw new ConflictException(String.format("Events with IDs: %s do not exist", notFoundIds));
             }
 
             compilation.setEvents(Set.copyOf(events));

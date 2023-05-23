@@ -2,6 +2,7 @@ package ru.practicum.event.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.EndpointHitDto;
@@ -9,6 +10,9 @@ import ru.practicum.HttpClient;
 import ru.practicum.ViewStatsDto;
 import ru.practicum.category.model.Category;
 import ru.practicum.category.service.CategoryService;
+import ru.practicum.comment.model.Comment;
+import ru.practicum.comment.model.CommentRequestParameters;
+import ru.practicum.comment.service.CommentService;
 import ru.practicum.event.dto.UpdateEventAdminRequest;
 import ru.practicum.event.dto.UpdateEventRequest;
 import ru.practicum.event.dto.UpdateEventUserRequest;
@@ -33,13 +37,14 @@ import static java.time.LocalDateTime.now;
 @Slf4j
 @Service
 @Transactional(readOnly = true)
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor_ = {@Lazy})
 public class EventServiceImpl implements EventService {
     private final RequestRepository requestRepository;
     public final EventRepository eventRepository;
     public final UserService userService;
     public final CategoryService categoryService;
     public  final HttpClient httpClient;
+    public final CommentService commentService;
 
     @Override
     @Transactional
@@ -66,6 +71,7 @@ public class EventServiceImpl implements EventService {
         eventToSave.setCreatedOn(now());
         eventToSave.setState(EventState.PENDING);
         eventToSave.setRequestModeration(requestModeration);
+        eventToSave.setComments(new HashSet<>());
 
         // сохраним сформированное событие.
         return eventRepository.save(eventToSave);
@@ -134,12 +140,10 @@ public class EventServiceImpl implements EventService {
             throw new NotFoundException(User.class.getSimpleName(), userId);
         }
 
-        return eventRepository.findEventByIdAndUserId(eventId, userId)
-                              .orElseThrow(() -> new NotFoundException("Event with id: "
-                                      + eventId
-                                      + " for user with id: "
-                                      + userId
-                                      + " does not exist"));
+        return eventRepository
+                .findEventByIdAndUserId(eventId, userId)
+                .orElseThrow(() -> new NotFoundException(String
+                        .format("Event with id: %d for user with id: %d does not exist", eventId, userId)));
     }
 
     @Override
@@ -182,7 +186,7 @@ public class EventServiceImpl implements EventService {
                     break;
                 default:
                     // Появился новый статус. Выдадим ошибку.
-                    throw new RuntimeException("State " + stateAction + " is not supported");
+                    throw new RuntimeException(String.format("State %s is not supported", stateAction));
             }
         }
 
@@ -212,7 +216,7 @@ public class EventServiceImpl implements EventService {
                         break;
                     default:
                         // Появился новый статус. Выдадим ошибку.
-                        throw new RuntimeException("State " + stateAction + " is not supported");
+                        throw new RuntimeException(String.format("State %s is not supported", stateAction));
                 }
             } else {
                 throw new ConflictException("An event can only be published" +
@@ -226,9 +230,8 @@ public class EventServiceImpl implements EventService {
         if (publishedDate != null) {
             int minPeriod = 1;
             if (publishedDate.plusHours(minPeriod).isAfter(eventToUpdate.getEventDate())) {
-                throw new ConflictException("the start date of the event to be changed must be no earlier than "
-                        + minPeriod
-                        + " hours from the publication date");
+                throw new ConflictException(String.format("the start date of the event to be changed" +
+                        " must be no earlier than %d hours from the publication date", minPeriod));
             }
         }
 
@@ -341,10 +344,18 @@ public class EventServiceImpl implements EventService {
         }
 
         // Заполним запросы на участие.
-        // TODO Переделать получение заявок на участие. Их нужно получать тем же запросом, который формирует events
         events = events.stream().peek(event -> {
             Set<Request> requests = requestRepository.findByEvent(event);
             event.setRequests(requests);
+        }).collect(Collectors.toList());
+
+        // Заполним комментарии.
+        events = events.stream().peek(event -> {
+            CommentRequestParameters commentParameters = CommentRequestParameters.builder()
+                                                                                 .eventId(event.getId())
+                                                                                 .build();
+            List<Comment> comments = commentService.getByParameters(commentParameters);
+            event.setComments(new HashSet<>(comments));
         }).collect(Collectors.toList());
 
         // Получим минимальную дату создания события.
