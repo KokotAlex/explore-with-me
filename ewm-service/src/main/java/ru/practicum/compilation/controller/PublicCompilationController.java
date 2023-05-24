@@ -37,7 +37,9 @@ public class PublicCompilationController {
                                                            .map(CompilationMapper::toCompilationDto)
                                                            .collect(Collectors.toList());
 
-        return ResponseEntity.status(HttpStatus.OK).body(compilationsDto);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(compilationsDto);
     }
 
     @GetMapping("/{compId}")
@@ -47,7 +49,9 @@ public class PublicCompilationController {
         Compilation compilation = compilationService.getById(compId);
         CompilationDto compilationDto = CompilationMapper.toCompilationDto(compilation);
 
-        return ResponseEntity.status(HttpStatus.OK).body(compilationDto);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(compilationDto);
     }
 
 }

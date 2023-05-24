@@ -33,7 +33,9 @@ public class AdminCompilationController {
         Compilation savedCompilation = compilationService.save(compilation, newCompilationDto.getEvents());
         CompilationDto compilationDto = CompilationMapper.toCompilationDto(savedCompilation);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(compilationDto);
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(compilationDto);
     }
 
     @DeleteMapping("/{compId}")
@@ -42,7 +44,9 @@ public class AdminCompilationController {
 
         compilationService.delete(compId);
 
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+        return ResponseEntity
+                .noContent()
+                .build();
     }
 
     @PatchMapping("/{compId}")
@@ -54,7 +58,9 @@ public class AdminCompilationController {
         Compilation updatedCompilation = compilationService.update(compId, updateCompilationRequest);
         CompilationDto compilationDto = CompilationMapper.toCompilationDto(updatedCompilation);
 
-        return ResponseEntity.status(HttpStatus.OK).body(compilationDto);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(compilationDto);
     }
 
 }

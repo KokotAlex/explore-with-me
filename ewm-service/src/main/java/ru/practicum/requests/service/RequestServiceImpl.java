@@ -94,11 +94,9 @@ public class RequestServiceImpl implements RequestService {
 
         Optional<Request> requestOptional = requestRepository.findByIdAndRequesterId(requestId, userId);
         Request requestToCancel = requestOptional
-                .orElseThrow(() -> new NotFoundException("Request with id: "
-                        + requestId
-                        + " for requester with id: "
-                        + userId
-                        + " does not exist"));
+                .orElseThrow(() -> new NotFoundException(String.format("Request with id: %d for requester with id:" +
+                        " %d does not exist", requestId, userId)));
+
         requestToCancel.setStatus(MembershipRequestStatus.CANCELED);
 
         return requestRepository.save(requestToCancel);
@@ -132,9 +130,8 @@ public class RequestServiceImpl implements RequestService {
 
         // Проверим, что для всех переданных идентификаторов имеются запросы на участие.
         if (requestIdToUpdate.size() != requestsToUpdate.size()) {
-            throw new NotFoundException("the id collection: "
-                    + requestIdToUpdate
-                    + "contains ids not mapped to event requests");
+            throw new NotFoundException(String
+                    .format("the id collection: %s contains ids not mapped to event requests", requestIdToUpdate));
         }
 
         Set<Request> eventRequests = event.getRequests();
@@ -146,9 +143,8 @@ public class RequestServiceImpl implements RequestService {
                 .map(Request::getId)
                 .collect(Collectors.toList());
         if (!unPendingRequestsId.isEmpty()) {
-            throw new ConflictException("Requests with id: "
-                    + unPendingRequestsId
-                    + "{} contain status other than pending");
+            throw new ConflictException(String
+                    .format("Requests with id: %s contain status other than pending", unPendingRequestsId));
         }
 
         List<Request> confirmedRequests = new ArrayList<>();
@@ -197,9 +193,8 @@ public class RequestServiceImpl implements RequestService {
                 List<MembershipRequestStatus> statusList = new ArrayList<>();
                 statusList.add(MembershipRequestStatus.CONFIRMED);
                 statusList.add(MembershipRequestStatus.REJECTED);
-                throw new ConflictException("the status that must be set for submitted requests for participation" +
-                        " in the event can only take the following values: "
-                        + statusList);
+                throw new ConflictException(String.format("the status that must be set for submitted requests for" +
+                        " participation in the event can only take the following values: %s", statusList));
         }
 
         // Выполним запись измененных заявок.

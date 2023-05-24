@@ -61,7 +61,9 @@ public class PrivateEventController {
                                                  .map(EventMapper::toEventShortDto)
                                                  .collect(Collectors.toList());
 
-        return ResponseEntity.status(HttpStatus.OK).body(events);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(events);
     }
 
     @GetMapping("/{eventId}")
@@ -73,7 +75,9 @@ public class PrivateEventController {
         Event event = eventService.getUsersEventById(userId, eventId);
         EventFullDto eventFullDto = EventMapper.toEventFullDto(event);
 
-        return ResponseEntity.status(HttpStatus.OK).body(eventFullDto);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(eventFullDto);
     }
 
     @PatchMapping("/{eventId}")
@@ -86,7 +90,9 @@ public class PrivateEventController {
         Event event = eventService.update(updateEventUserRequest, userId, eventId);
         EventFullDto eventFullDto = EventMapper.toEventFullDto(event);
 
-        return ResponseEntity.status(HttpStatus.OK).body(eventFullDto);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(eventFullDto);
     }
 
     @GetMapping("/{eventId}/requests")
@@ -101,7 +107,9 @@ public class PrivateEventController {
                                                             .map(RequestMapper::toParticipationRequestDto)
                                                             .collect(Collectors.toList());
 
-        return ResponseEntity.status(HttpStatus.OK).body(requestsDto);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(requestsDto);
     }
 
     @PatchMapping("/{eventId}/requests")
@@ -117,7 +125,9 @@ public class PrivateEventController {
                 userId,
                 eventId);
 
-        return ResponseEntity.status(HttpStatus.OK).body(result);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(result);
     }
 
 }

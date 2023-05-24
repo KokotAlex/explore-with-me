@@ -42,7 +42,9 @@ public class AdminCategoryController {
 
         service.delete(catId);
 
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return ResponseEntity
+                .noContent()
+                .build();
     }
 
     @PatchMapping("/{catId}")

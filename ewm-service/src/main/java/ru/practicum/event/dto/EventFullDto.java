@@ -3,9 +3,12 @@ package ru.practicum.event.dto;
 
 import lombok.*;
 import ru.practicum.category.dto.CategoryDto;
+import ru.practicum.comment.dto.CommentShortDto;
 import ru.practicum.event.model.EventState;
 import ru.practicum.event.model.Location;
 import ru.practicum.user.dto.UserShortDto;
+
+import java.util.List;
 
 /**
  * Список состояний жизненного цикла события
@@ -61,6 +64,9 @@ public class EventFullDto {
 
   // Количество просмотрев события.
   private Long views;
+
+  // Комментарии к событию.
+  private List<CommentShortDto> comments;
 
 }
 

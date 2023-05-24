@@ -4,6 +4,7 @@ package ru.practicum.event.model;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
 import ru.practicum.category.model.Category;
+import ru.practicum.comment.model.Comment;
 import ru.practicum.requests.model.Request;
 import ru.practicum.user.model.User;
 
@@ -105,6 +106,10 @@ public class Event {
   // Запросы на участие
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "event")
   private Set<Request> requests;
+
+  // Комментарии
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "event")
+  private Set<Comment> comments;
 
   public Event(Long id,
                String annotation,
