@@ -5,7 +5,7 @@
 Данное приложение является афишей. В этой афише можно предложить какое-либо событие от выставки до похода в кино и собрать компанию для участия в нём.
 
 *Использованные технологии:*
-Java, Spring Boot, Maven, Hibernate, SQL DSL, Lomboc, PostgreSQL, Docker, RESTful API
+Java, Spring Boot, Maven, Hibernate, SQL DSL, Lomboc, junit, PostgreSQL, Docker, RESTful API
 
 ## Реализованная функциональность
 
